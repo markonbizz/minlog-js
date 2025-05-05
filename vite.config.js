@@ -21,7 +21,6 @@ export default defineConfig({
         },
         outDir: 'build',
         rollupOptions: {
-            external: ['chalk', 'moment', 'sprintf-js', 'strip-ansi', 'traverse'],
             plugins: [
                 copy({
                     targets: [
@@ -30,6 +29,10 @@ export default defineConfig({
                 })
             ]
         }
+    },
+    optimizeDeps: {
+        include: ['chalk', 'moment', 'sprintf-js', 'strip-ansi', 'traverse'],
+        exclude: ['@modules']
     },
     plugins: [
         dts({
