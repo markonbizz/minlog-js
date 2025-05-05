@@ -31,7 +31,11 @@ export default outputs.map(({ file, format }) => ({
                 { find: '@modules', replacement: path.resolve(__dirname, 'src/modules') },
             ]
         }),
-        commonjs(),
+        commonjs({
+            include: 'node_modules/**',
+            exclude: ['src/**', 'test/**'],
+            extensions: ['.js'],
+        }),
         resolve(),
     ],
 }));
