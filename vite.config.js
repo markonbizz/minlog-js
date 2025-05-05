@@ -15,8 +15,8 @@ export default defineConfig({
     },
     build: {
         lib: {
-            entry: './index.js', // main entry point for your lib
-            formats: ['es', 'cjs'], // output both ESM (.mjs) and CJS (.js)
+            entry: './index.js',  // Your main entry file
+            formats: ['es', 'cjs'],  // ESM (.mjs) and CJS (.cjs)
             fileName: (format) => format === 'es' ? 'index.mjs' : 'index.cjs',
         },
         outDir: 'build',
@@ -25,7 +25,7 @@ export default defineConfig({
             plugins: [
                 copy({
                     targets: [
-                        { src: 'package.json', dest: 'build/' } // Copy package.json to build
+                        { src: './package.json', dest: './build/' }
                     ]
                 })
             ]
@@ -33,7 +33,7 @@ export default defineConfig({
     },
     plugins: [
         dts({
-            include: ['index.js', 'modules'], // Include your source files for dts generation
+            include: ['index.js', 'modules'], // Include source files for DTS generation
             insertTypesEntry: true,
             outDir: 'build'
         })

@@ -16,7 +16,8 @@
         }
     },
     "files": [
-        "build/"
+        "build/",
+        "package.json"
     ],
     "scripts": {
         "build": "vite build"
