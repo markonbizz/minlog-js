@@ -31,14 +31,17 @@ export function setEventStyles(options: any): void;
  * - message.nonInfoEndStyle: string
  */
 export function setMessageStyles(options: any): void;
+/**
+ * @param {Object} params
+ * @param {string} params.level - The log level (e.g., "info", "error").
+ * @param {string} params.service - The service name.
+ * @param {string} params.event - The event name (optional).
+ * @param {string[]} params.message - The log message(s) to be colorized.
+ * @returns {Object} - An object containing the styled level, service, event, and message.
+ */
 export function stylize({ level, service, event, message }: {
-    level: any;
-    service: any;
-    event?: string | undefined;
-    message?: string[] | undefined;
-}): {
-    level: any;
-    service: any;
+    level: string;
+    service: string;
     event: string;
-    message: string;
-};
+    message: string[];
+}): Object;

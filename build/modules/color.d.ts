@@ -21,13 +21,20 @@ export function setEventColor(color: import('chalk').ChalkInstance): void;
  */
 export function setMessageColor(level: string, color: import('chalk').ChalkInstance): void;
 /**
- * @param {string} level - The log level (e.g., "info", "error").
- * @param {string} service - The service name.
- * @param {string} event - The event name (optional).
- * @param {string[]} message - The log message(s) to be colorized.
+ * Colorize the given level, service, event, and message.
+ * @param {Object} params
+ * @param {string} params.level - The log level (e.g., "info", "error").
+ * @param {string} params.service - The service name.
+ * @param {string} params.event - The event name (optional).
+ * @param {string[]} params.message - The log message(s) to be colorized.
  * @returns
  */
-export function colorize({ level, service, event, message }: string): {
+export function colorize({ level, service, event, message }: {
+    level: string;
+    service: string;
+    event: string;
+    message: string[];
+}): {
     level: any;
     service: string;
     event: string;

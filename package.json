@@ -27,6 +27,8 @@
         "traverse": "^0.6.11"
     },
     "devDependencies": {
+        "@types/traverse": "^0.6.37",
+        "@types/sprintf-js": "^1.1.4",
         "typescript": "^5.8.3",
         "vite": "^6.3.5",
         "vite-plugin-dts": "^4.5.3"

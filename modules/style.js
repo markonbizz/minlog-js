@@ -67,6 +67,14 @@ export function setMessageStyles(options) {
     });
 }
 
+/**
+ * @param {Object} params
+ * @param {string} params.level - The log level (e.g., "info", "error").
+ * @param {string} params.service - The service name.
+ * @param {string} params.event - The event name (optional).
+ * @param {string[]} params.message - The log message(s) to be colorized. 
+ * @returns {Object} - An object containing the styled level, service, event, and message.
+ */
 export function stylize({ level, service, event = "", message = [""] }) {
     const _level = (() => {
         const _caseControl = styleOptions.level.caseControl;

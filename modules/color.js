@@ -2,6 +2,16 @@ import chalk from "chalk";
 import stripAnsi from "strip-ansi";
 import traverse from "traverse";
 
+/**
+ * The color for the log level.
+ * @property {import("chalk").ChalkInstance} debug - The color for debug messages.
+ * @property {import("chalk").ChalkInstance} info - The color for info messages.
+ * @property {import("chalk").ChalkInstance} warn - The color for warning messages.
+ * @property {import("chalk").ChalkInstance} error - The color for error messages.
+ * @property {import("chalk").ChalkInstance} fatal - The color for fatal messages.
+ * @property {import("chalk").ChalkInstance} success - The color for success messages.
+ * @property {import("chalk").ChalkInstance} default - The default color for messages.
+ */
 let levelColor = {
     debug: chalk.gray.dim,
     info: chalk.cyan,
@@ -12,8 +22,28 @@ let levelColor = {
     default: chalk.white,
 };
 
+/**
+ * The color for the service name.
+ * @type {import("chalk").ChalkInstance}
+ * @default chalk.blueBright
+ */
 let serviceColor = chalk.blueBright;
+
+/**
+ * The color for the event name.
+ * @type {import("chalk").ChalkInstance}
+ * @default chalk.magentaBright
+ */
 let eventColor = chalk.magentaBright;
+
+/**
+ * The color for the message.
+ * @property {import("chalk").ChalkInstance} debug - The color for debug messages.
+ * @property {import("chalk").ChalkInstance} info - The color for info messages.
+ * @property {import("chalk").ChalkInstance} warn - The color for warning messages.
+ * @property {import("chalk").ChalkInstance} error - The color for error messages.
+ * @property {import("chalk").ChalkInstance} fatal - The color for fatal messages.
+ */
 let messageColor = {
     debug: chalk.gray.dim,
     info: chalk.white,
@@ -28,6 +58,7 @@ let messageColor = {
  * @param {import("chalk").ChalkInstance} color 
  */
 export function setLevelColor(level, color) {
+    // @ts-ignore
     traverse(levelColor).forEach(function (x) {
         if (this.key === level.toLowerCase()) {
             this.update(color);
@@ -57,6 +88,7 @@ export function setEventColor(color) {
  * @param {import("chalk").ChalkInstance} color
  */
 export function setMessageColor(level, color) {
+    // @ts-ignore
     traverse(messageColor).forEach(function (x) {
         if (this.key === level.toLowerCase()) {
             this.update(color);
@@ -65,14 +97,18 @@ export function setMessageColor(level, color) {
 }
 
 /**
- * @param {string} level - The log level (e.g., "info", "error").
- * @param {string} service - The service name.
- * @param {string} event - The event name (optional).
- * @param {string[]} message - The log message(s) to be colorized. 
+ * Colorize the given level, service, event, and message.
+ * @param {Object} params
+ * @param {string} params.level - The log level (e.g., "info", "error").
+ * @param {string} params.service - The service name.
+ * @param {string} params.event - The event name (optional).
+ * @param {string[]} params.message - The log message(s) to be colorized. 
  * @returns 
  */
 export function colorize({ level, service, event = "", message = [""] }) {
+    // @ts-ignore
     const levelFn = levelColor[level.toLowerCase()] || levelColor.default;
+    // @ts-ignore
     const messageFn = messageColor[level.toLowerCase()] || chalk.white;
 
     const _level = levelFn(level);

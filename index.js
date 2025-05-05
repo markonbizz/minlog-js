@@ -12,9 +12,17 @@ function getCurrentTimestamp() {
     return { date, timeStamp: `${date} ${time}` };
 }
 
+/**
+ * 
+ * @param {string} level 
+ * @param {string} service 
+ * @param {string} event 
+ * @param {string[]} message 
+ */
 function log(level, service, event, message) {
     const { date, timeStamp } = getCurrentTimestamp();
     const _stylized = stylize({ level, service, event, message });
+    // @ts-ignore
     const _colored = colorize(_stylized);
     const _formatted = sprintf("%s | %s | %s %s: %s", timeStamp, _colored.level, _colored.service, _colored.event, _colored.message);
 
