@@ -17,7 +17,7 @@ export default defineConfig({
         lib: {
             entry: './index.js', // main entry point for your lib
             formats: ['es', 'cjs'], // output both ESM (.mjs) and CJS (.js)
-            fileName: (format) => format === 'es' ? 'index.mjs' : 'index.js',
+            fileName: (format) => format === 'es' ? 'index.mjs' : 'index.cjs',
         },
         outDir: 'build',
         rollupOptions: {
