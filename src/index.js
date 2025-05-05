@@ -16,7 +16,7 @@ function log(level, service, event, message) {
     const { date, timeStamp } = getCurrentTimestamp();
     const _stylized = stylize({ level, service, event, message });
     const _colored = colorize(_stylized);
-    const _formatted = sprintf("%s | %s | %s > %s: %s", timeStamp, _colored.level, _colored.service, _colored.event, _colored.message);
+    const _formatted = sprintf("%s | %s | %s %s: %s", timeStamp, _colored.level, _colored.service, _colored.event, _colored.message);
 
     console.log("%s", _formatted);
 

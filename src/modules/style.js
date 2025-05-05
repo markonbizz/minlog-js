@@ -5,7 +5,7 @@ let styleOptions = {
         caseControl: "upper",
     },
     event: {
-        prefix: "",
+        prefix: "> ",
     },
     message: {
         prefixMessage: "\n----- received following messages -----\n",

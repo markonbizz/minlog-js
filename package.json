@@ -33,7 +33,8 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@swc/cli": "^0.7.3",
     "@swc/core": "^1.11.24",
-    "rollup": "^4.40.1"
+    "rollup": "^4.40.1",
+    "rollup-plugin-dts": "^6.2.1"
   },
   "keywords": [
     "nptu",

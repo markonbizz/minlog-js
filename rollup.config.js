@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import alias from '@rollup/plugin-alias';
+import dts from 'rollup-plugin-dts'; // <--- ADD THIS
 
 // Emulate __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -19,12 +20,13 @@ const outputs = [
     }
 ];
 
-export default outputs.map(({ file, format }) => ({
+const buildConfigs = outputs.map(({ file, format }) => ({
     input: 'src/index.js',
     output: {
         file,
         format,
     },
+    external: ['chalk', 'strip-ansi', 'fs', 'path'],
     plugins: [
         alias({
             entries: [
@@ -38,3 +40,23 @@ export default outputs.map(({ file, format }) => ({
         resolve(),
     ],
 }));
+
+// ✨ ADD DTS generation config
+const dtsConfig = {
+    input: 'src/index.js',
+    output: { 
+        file: 'build/index.d.ts', 
+        format: 'es' 
+    },
+    external: ['chalk', 'strip-ansi', 'fs', 'path'],
+    plugins: [
+        alias({
+            entries: [
+                { find: '@modules', replacement: path.resolve(__dirname, 'src/modules') },
+            ]
+        }),
+        dts()
+    ],
+};
+
+export default [...buildConfigs, dtsConfig];
