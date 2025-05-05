@@ -15,8 +15,8 @@ export default defineConfig({
     },
     build: {
         lib: {
-            entry: './index.js',  // Your main entry file
-            formats: ['es', 'cjs'],  // ESM (.mjs) and CJS (.cjs)
+            entry: './index.js',
+            formats: ['es', 'cjs'],
             fileName: (format) => format === 'es' ? 'index.mjs' : 'index.cjs',
         },
         outDir: 'build',
@@ -36,7 +36,7 @@ export default defineConfig({
     },
     plugins: [
         dts({
-            include: ['index.js', 'modules'], // Include source files for DTS generation
+            include: ['index.js'], // Include source files for DTS generation
             insertTypesEntry: true,
             outDir: 'build'
         })
