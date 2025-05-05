@@ -6,23 +6,19 @@
   "author": "Marcus Xie",
   "type": "module",
   "main": "./build/cjs/index.cjs",
-  "module": "./build/mjs/index.mjs",
+  "module": "./build/esm/index.mjs",
   "scripts": {
     "build:cjs": "rollup -c --output.file build/cjs/index.cjs --output.format cjs",
-    "build:mjs": "rollup -c --output.file build/mjs/index.js --output.format esm",
+    "build:mjs": "rollup -c --output.file build/esm/index.mjs --output.format esm",
     "build": "rollup -c",
     "clean": "rm -rf build"
   },
   "exports": {
     ".": {
-      "import": "./build/mjs/index.js",
+      "import": "./build/esm/index.mjs",
       "require": "./build/cjs/index.cjs"
     }
   },
-  "files": [
-    "build/mjs",
-    "build/cjs"
-  ],
   "dependencies": {
     "chalk": "^5.4.1",
     "moment": "^2.30.1",

@@ -32,9 +32,8 @@ export default outputs.map(({ file, format }) => ({
             ]
         }),
         commonjs({
-            include: 'node_modules/**',
-            exclude: ['src/**', 'test/**'],
-            extensions: ['.js'],
+            include: ['node_modules/**', 'src/**'],
+            requireReturnsDefault: 'preferred',
         }),
         resolve(),
     ],
