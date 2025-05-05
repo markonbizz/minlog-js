@@ -34,6 +34,7 @@ const buildConfigs = outputs.map(({ file, format }) => ({
             ]
         }),
         commonjs({
+            include: 'node_modules/**',
             requireReturnsDefault: 'preferred',
         }),
         resolve(),
