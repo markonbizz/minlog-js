@@ -229,7 +229,7 @@ let _isWrite = true;
  */
 function setIsWriteFile(value) {
     if (typeof value === "boolean") {
-        _isWrite = value || true;
+        _isWrite = value;
     }
 }
 

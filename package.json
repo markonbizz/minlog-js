@@ -21,8 +21,6 @@
         "build/index.d.ts"
     ],
     "scripts": {
-        "build:cjs": "rollup -c --output.file build/cjs/index.cjs --output.format cjs",
-        "build:mjs": "rollup -c --output.file build/esm/index.mjs --output.format esm",
         "build": "rollup -c",
         "clean": "rm -rf build"
     },
