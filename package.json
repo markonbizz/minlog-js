@@ -6,7 +6,7 @@
   "author": "Marcus Xie",
   "type": "module",
   "main": "./build/cjs/index.cjs",
-  "module": "./build/mjs/index.js",
+  "module": "./build/mjs/index.mjs",
   "scripts": {
     "build:cjs": "rollup -c --output.file build/cjs/index.cjs --output.format cjs",
     "build:mjs": "rollup -c --output.file build/mjs/index.js --output.format esm",
