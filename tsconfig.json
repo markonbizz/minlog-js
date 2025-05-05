@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true,
+        "declaration": true,
+        "emitDeclarationOnly": false,
+        "outDir": "build",
+        "module": "ESNext",
+        "target": "ESNext",
+        "moduleResolution": "node",
+        "strict": true,
+        "esModuleInterop": true,
+        "baseUrl": "./",
+        "paths": {
+            "@modules/*": ["modules/*"],
+        },
+    },
+    "include": ["./", "./modules/**/*.js"],
+}

@@ -5,24 +5,19 @@
     "license": "ISC",
     "author": "Marcus Xie",
     "type": "module",
-    "main": "./build/cjs/index.cjs",
-    "module": "./build/esm/index.mjs",
+    "main": "./build/index.js",
+    "module": "./build/index.mjs",
     "types": "./build/index.d.ts",
     "exports": {
-        ".": {
-            "types": "./build/index.d.ts",
-            "import": "./build/esm/index.mjs",
-            "require": "./build/cjs/index.cjs"
-        }
+        "types": "./build/index.d.ts",
+        "import": "./build/index.mjs",
+        "require": "./build/index.js"
     },
     "files": [
-        "build/esm/",
-        "build/cjs/",
-        "build/index.d.ts"
+        "build/"
     ],
     "scripts": {
-        "build": "rollup -c",
-        "clean": "rm -rf build"
+        "build": "vite build"
     },
     "dependencies": {
         "chalk": "^5.4.1",
@@ -32,14 +27,9 @@
         "traverse": "^0.6.11"
     },
     "devDependencies": {
-        "@rollup/plugin-alias": "^5.1.1",
-        "@rollup/plugin-commonjs": "^28.0.3",
-        "@rollup/plugin-node-resolve": "^16.0.1",
-        "@rollup/plugin-terser": "^0.4.4",
-        "@swc/cli": "^0.7.3",
-        "@swc/core": "^1.11.24",
-        "rollup": "^4.40.1",
-        "rollup-plugin-dts": "^6.2.1"
+        "typescript": "^5.8.3",
+        "vite": "^6.3.5",
+        "vite-plugin-dts": "^4.5.3"
     },
     "keywords": [
         "nptu",
