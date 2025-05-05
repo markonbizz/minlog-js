@@ -8,7 +8,7 @@ import { sprintf } from "sprintf-js";
 function getCurrentTimestamp() {
     const momentInstance = moment();
     const date = momentInstance.format("YYYY-MM-DD");
-    const time = momentInstance.format("HH:mm:ss");
+    const time = momentInstance.format("h:mm:ss A");
     return { date, timeStamp: `${date} ${time}` };
 }
 
@@ -64,22 +64,57 @@ const loggerInstance = {
     success: (service, event, message) => log("success", service, event, message),
 };
 
+/**
+ * Logger function to create a logger instance.
+ * @returns {Object} loggerInstance - The logger instance.
+ *
+ * ---
+ *
+ * Currently default prompt format:
+ * - "YYYY-MM-DD HH:mm:ss A | level | service > event: message"
+ *
+ * Currently default color format:
+ *
+ * level: 
+ *     - info: "cyan"
+ *     - error: "red"
+ *     - fatal: "red"
+ *     - warn: "yellow"
+ *     - debug: "gray"
+ *     - success: "green"
+ *
+ * service: "blue"
+ *
+ * event: "magenta"
+ *
+ * message:
+ *     - info: "white"
+ *     - error: "red"
+ *     - fatal: "red"
+ *     - warn: "yellow"
+ *     - debug: "gray"
+ *     - success: "green"
+ */
 function Logger() {
     return loggerInstance;
 }
 
+// exports @modules/style
 export {
-    setEventStyles,
-    setLevelStyles,
-    setMessageStyles,
-    setEventColor,
-    setLevelColor,
-    setMessageColor,
-    setServiceColor,
-    writeLogFile,
-    getLogDumpDir,
-    isWriteFile,
-    setIsWriteFile,
-    setLogDumpDir,
+    setEventStyles, setLevelStyles, setMessageStyles
+};
+
+// exports @modules/color
+export {
+    setEventColor, setLevelColor, setMessageColor, setServiceColor
+};
+
+// exports @modules/file
+export {
+    getLogDumpDir, isWriteFile, setLogDumpDir, setIsWriteFile
+};
+
+// exports Logger
+export {
     Logger
 };

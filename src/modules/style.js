@@ -16,6 +16,15 @@ let styleOptions = {
     },
 };
 
+/**
+ * Sets the style options for the level.
+ * @param {Object} options
+ * @param {string} options.key - The key(s) to update.
+ * @param {string} options.value - The value(s) to set.
+ * 
+ * Currently available options:
+ * - level.caseControl: "upper", "lower", "capitalize"
+ */
 export function setLevelStyles(options) {
     traverse(styleOptions.level).forEach(function (x) {
         if (this.key === options.key) {
@@ -24,6 +33,13 @@ export function setLevelStyles(options) {
     });
 }
 
+/**
+ * Sets the style options for the event.
+ * @param {any} options 
+ *
+ * Currently available options:
+ * - event.prefix: string
+ */
 export function setEventStyles(options) {
     traverse(styleOptions.event).forEach(function (x) {
         if (this.key === options.key) {
@@ -32,6 +48,17 @@ export function setEventStyles(options) {
     });
 }
 
+/**
+ * Sets the style options for the message.
+ * @param {any} options 
+ *
+ * Currently available options:
+ * - message.prefixMessage: string
+ * - message.indentStyle: string
+ * - message.nonInfoIndentStyle: string
+ * - message.endStyle: string
+ * - message.nonInfoEndStyle: string 
+ */
 export function setMessageStyles(options) {
     traverse(styleOptions.message).forEach(function (x) {
         if (this.key === options.key) {
