@@ -21,7 +21,7 @@ export default defineConfig({
         },
         outDir: 'build',
         rollupOptions: {
-            external: ['fs', 'path'],
+            external: ['fs', 'path', 'chalk', 'moment', 'sprintf-js', 'strip-ansi', 'traverse'],
             plugins: [
                 copy({
                     targets: [
