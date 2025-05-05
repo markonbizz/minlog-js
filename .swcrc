@@ -1,0 +1,23 @@
+{
+    "jsc": {
+        "target": "es2022",
+        "parser": {
+            "syntax": "ecmascript",
+            "jsx": false
+        },
+        "baseUrl": "./",
+        "paths": {
+            "@modules/*": ["src/modules/*"],
+            "@src/*": ["src/*"]
+        },
+        "minify": {
+            "compress": true,
+            "mangle": true,
+            "toplevel": true
+        }
+    },
+    "minify": true,
+    "module": {
+        "type": "commonjs"
+    }
+}
