@@ -5,21 +5,22 @@
   "license": "ISC",
   "author": "Marcus Xie",
   "type": "module",
-  "main": "build/cjs/src/index.js",
-  "module": "build/esm/src/index.js",
+  "main": "./build/cjs/index.cjs",
+  "module": "./build/mjs/index.js",
   "scripts": {
-    "build:esm": "swc src -d build/esm --config-file ./swcrc.esm.json",
-    "build:cjs": "swc src -d build/cjs --config-file ./swcrc.cjs.json",
-    "build": "npm run build:esm && npm run build:cjs"
+    "build:cjs": "rollup -c --output.file build/cjs/index.cjs --output.format cjs",
+    "build:mjs": "rollup -c --output.file build/mjs/index.js --output.format esm",
+    "build": "rollup -c",
+    "clean": "rm -rf build"
   },
   "exports": {
     ".": {
-      "import": "./build/esm/src/index.js",
-      "require": "./build/cjs/src/index.js"
+      "import": "./build/mjs/index.js",
+      "require": "./build/cjs/index.cjs"
     }
   },
   "files": [
-    "build/esm",
+    "build/mjs",
     "build/cjs"
   ],
   "dependencies": {
@@ -30,8 +31,13 @@
     "traverse": "^0.6.11"
   },
   "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.1",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
     "@swc/cli": "^0.7.3",
-    "@swc/core": "^1.11.24"
+    "@swc/core": "^1.11.24",
+    "rollup": "^4.40.1"
   },
   "keywords": [
     "nptu",
