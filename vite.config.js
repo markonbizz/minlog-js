@@ -2,8 +2,10 @@ import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import copy from 'rollup-plugin-copy';
 
-const __dirname = path.resolve(fileURLToPath(import.meta.url), '..');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig({
     resolve: {
@@ -20,13 +22,21 @@ export default defineConfig({
         outDir: 'build',
         rollupOptions: {
             external: ['chalk', 'moment', 'sprintf-js', 'strip-ansi', 'traverse'],
+            plugins: [
+                copy({
+                    targets: [
+                        { src: 'package.json', dest: 'build' },
+                    ],
+                    hook: 'writeBundle'
+                })
+            ]
         }
     },
     plugins: [
-        
         dts({
-            include: ['modules', 'index.js'],
+            include: ['index.js', 'modules'],
+            insertTypesEntry: true,
             outDir: 'build'
-        })
+        }),
     ]
 });

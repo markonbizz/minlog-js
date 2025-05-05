@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@modules/*": ["modules/*"]
+        },
         "allowJs": true,
         "checkJs": true,
         "declaration": true,
@@ -9,11 +13,7 @@
         "target": "ESNext",
         "moduleResolution": "node",
         "strict": true,
-        "esModuleInterop": true,
-        "baseUrl": "./",
-        "paths": {
-            "@modules/*": ["modules/*"],
-        },
+        "esModuleInterop": true
     },
-    "include": ["./", "./modules/**/*.js"],
+    "include": ["index.js", "modules"]
 }
