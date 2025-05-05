@@ -21,6 +21,7 @@ export default defineConfig({
         },
         outDir: 'build',
         rollupOptions: {
+            external: ['fs', 'path'],
             plugins: [
                 copy({
                     targets: [
