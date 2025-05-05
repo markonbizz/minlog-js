@@ -7,6 +7,7 @@
   "type": "module",
   "main": "./build/cjs/index.cjs",
   "module": "./build/esm/index.mjs",
+  "types": "./build/index.d.ts",
   "scripts": {
     "build:cjs": "rollup -c --output.file build/cjs/index.cjs --output.format cjs",
     "build:mjs": "rollup -c --output.file build/esm/index.mjs --output.format esm",
