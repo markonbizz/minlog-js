@@ -2,7 +2,7 @@ import moment from "moment";
 
 import { stylize, setEventStyles, setLevelStyles, setMessageStyles } from "@modules/style";
 import { colorize, decolorize, setEventColor, setLevelColor, setMessageColor, setServiceColor } from "@modules/color";
-import { writeLogFile, getLogDumpPath, getWriteLogFile, setLogDumpDir } from "@modules/file";
+import { writeLogFile, getLogDumpDir, isWriteFile, setLogDumpDir, setIsWriteFile } from "@modules/file";
 import { sprintf } from "sprintf-js";
 
 function getCurrentTimestamp() {
@@ -16,12 +16,12 @@ function log(level, service, event, message) {
     const { date, timeStamp } = getCurrentTimestamp();
     const _stylized = stylize({ level, service, event, message });
     const _colored = colorize(_stylized);
-    const _formatted = sprintf("%s|%s|%s %s: %s", timeStamp, _colored.level, _colored.service, _colored.event, _colored.message);
+    const _formatted = sprintf("%s | %s | %s > %s: %s", timeStamp, _colored.level, _colored.service, _colored.event, _colored.message);
 
     console.log("%s", _formatted);
 
-    if (getWriteLogFile()) {
-        writeLogFile(`logs/${date}.log`, decolorize(_formatted));
+    if (isWriteFile()) {
+        writeLogFile(`${date}`, decolorize(_formatted));
     }
 }
 
@@ -64,7 +64,6 @@ const loggerInstance = {
     success: (service, event, message) => log("success", service, event, message),
 };
 
-
 function Logger() {
     return loggerInstance;
 }
@@ -78,8 +77,9 @@ export {
     setMessageColor,
     setServiceColor,
     writeLogFile,
-    getLogDumpPath,
-    getWriteLogFile,
+    getLogDumpDir,
+    isWriteFile,
+    setIsWriteFile,
     setLogDumpDir,
     Logger
 };

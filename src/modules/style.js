@@ -1,16 +1,16 @@
 import traverse from 'traverse';
-import { sprintf } from 'sprintf-js';
 
 let styleOptions = {
     level: {
         caseControl: "upper",
     },
     event: {
-        prefix: "> ",
+        prefix: "",
     },
     message: {
-        prefixMessage: "     received following messages:\n",
-        indentStyle: "    > ",
+        prefixMessage: "\n----- received following messages -----\n",
+        indentStyle: "",
+        nonInfoIndentStyle: "    > ",
         endStyle: ", ",
         nonInfoEndStyle: "\n",
     },
@@ -64,6 +64,7 @@ export function stylize({ level, service, event = "", message = [""] }) {
         const {
             prefixMessage,
             indentStyle,
+            nonInfoIndentStyle,
             endStyle,
             nonInfoEndStyle,
         } = styleOptions.message;
@@ -78,9 +79,9 @@ export function stylize({ level, service, event = "", message = [""] }) {
         });
 
         if (_level !== "INFO") {
-            return prefixMessage + _normalized.map(line => `${indentStyle}${line}`).join(nonInfoEndStyle);
+            return prefixMessage + _normalized.map(line => `${nonInfoIndentStyle}${line}`).join(nonInfoEndStyle);
         } else {
-            return _normalized.map(line => `${indentStyle}${line}`).join(endStyle) + "\n";
+            return _normalized.map(line => `${indentStyle}${line}`).join(endStyle);
         }
     })();
 

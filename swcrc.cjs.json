@@ -11,9 +11,7 @@
             "@src/*": ["src/*"]
         },
         "minify": {
-            "compress": true,
-            "mangle": true,
-            "toplevel": true
+            "compress": true
         }
     },
     "minify": true,

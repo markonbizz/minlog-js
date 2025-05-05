@@ -4,11 +4,24 @@
   "description": "A simple event logger",
   "license": "ISC",
   "author": "Marcus Xie",
-  "type": "commonjs",
-  "main": "build/index.js",
+  "type": "module",
+  "main": "build/cjs/src/index.js",
+  "module": "build/esm/src/index.js",
   "scripts": {
-    "build": "swc src -d dist"
+    "build:esm": "swc src -d build/esm --config-file ./swcrc.esm.json",
+    "build:cjs": "swc src -d build/cjs --config-file ./swcrc.cjs.json",
+    "build": "npm run build:esm && npm run build:cjs"
   },
+  "exports": {
+    ".": {
+      "import": "./build/esm/src/index.js",
+      "require": "./build/cjs/src/index.js"
+    }
+  },
+  "files": [
+    "build/esm",
+    "build/cjs"
+  ],
   "dependencies": {
     "chalk": "^5.4.1",
     "moment": "^2.30.1",
