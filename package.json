@@ -15,6 +15,7 @@
   },
   "exports": {
     ".": {
+      "types": "./build/index.d.ts",
       "import": "./build/esm/index.mjs",
       "require": "./build/cjs/index.cjs"
     }

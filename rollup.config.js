@@ -34,14 +34,13 @@ const buildConfigs = outputs.map(({ file, format }) => ({
             ]
         }),
         commonjs({
-            include: ['node_modules/**', 'src/**'],
+            include: 'node_modules/**',
             requireReturnsDefault: 'preferred',
         }),
         resolve(),
     ],
 }));
 
-// ✨ ADD DTS generation config
 const dtsConfig = {
     input: 'src/index.js',
     output: { 
