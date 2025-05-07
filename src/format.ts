@@ -1,10 +1,10 @@
-import moment = require("moment");
+import dayjs from 'dayjs'
 import {
     stylizeLevelText,
     stylizeServiceText,
     stylizeEventText,
     stylizeMessageText
-} from "./style";
+} from "./style"
 
 export type LogData = {
     level: string;
@@ -23,10 +23,11 @@ const defaultLevelText: Record<string, string> = {
 };
 const defaultLogFormat: Record<string, string> = {
     time: 'YYYY-MM-DD HH:mm:ss',
-    header: '%l | %t | %s%e:%m'
+    fmt: '$l | $t | $s$e:$m'
 }
 
 let levelText: Record<string, string> = { ...defaultLevelText };
+let logFormat: Record<string, string> = { ...defaultLogFormat };
 
 /**
  * Customize the text for a specific log level if you want to
@@ -42,13 +43,40 @@ export function setLevelText(level: string, text: string): void {
 }
 
 /**
+ * Sets the log format
+ * @param fmt 
+ * available variables:
+ * - $l - log level
+ * - $t - time
+ * - $s - service
+ * - $e - event
+ * - $m - message
+ */
+export function setLogFormat(fmt: string): void {
+    if (fmt) {
+        logFormat.fmt = fmt;
+    }
+}
+
+/**
+ * Set the time format for the log
+ * @param fmt this follows the moment.js format 
+ */
+export function setLogTimeFormat(fmt: string): void {
+    if (fmt) {
+        logFormat.time = fmt;
+    }
+}
+
+
+/**
  * Get current time
  * @param fmt 
  * @returns 
  */
 export function getCurrentTime(fmt: string): string {
     const format = fmt || defaultLogFormat.time;
-    return moment().format(format);
+    return dayjs().format(format);
 }
 
 /**
@@ -79,9 +107,9 @@ export function createLogData(
  * @param logData 
  * @returns  
  */
-export function format(fmt: string, logData: LogData): string {
-    
-    return fmt
+export function format(logData: LogData): string {
+    let _retfmt = logFormat.fmt || defaultLogFormat.fmt;
+    return _retfmt
         .replace('$l', stylizeLevelText(logData.level, logData.level))
         .replace('$t', logData.time)
         .replace('$s', stylizeServiceText(logData.service))
@@ -90,8 +118,10 @@ export function format(fmt: string, logData: LogData): string {
 }
 
 export default {
-    createLogData,
-    format,
     setLevelText,
-    getCurrentTime
+    setLogFormat,
+    setLogTimeFormat,
+    getCurrentTime,
+    createLogData,
+    format
 };

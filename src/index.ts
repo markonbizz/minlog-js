@@ -2,8 +2,9 @@ import * as format from './format'
 import * as file from './file'
 import * as style from './style'
 
-function minlog(fmt: string, log: format.LogData): void {
-    const data: string = format.format(fmt, log);
+
+function minlog(log: format.LogData): void {
+    const data: string = format.format(log);
     console.log(data);
     if (file.isAllowToWriteFile()) {
         file.writeToFile("", data);

@@ -32,8 +32,11 @@ __export(format_exports, {
   default: () => format_default,
   format: () => format,
   getCurrentTime: () => getCurrentTime,
-  setLevelText: () => setLevelText
+  setLevelText: () => setLevelText,
+  setLogFormat: () => setLogFormat,
+  setLogTimeFormat: () => setLogTimeFormat
 });
+import dayjs from "dayjs";
 
 // src/style.ts
 var style_exports = {};
@@ -77,7 +80,7 @@ var defaultEventStyles = {
   color: chalk.magentaBright,
   end: "",
   indent: 0,
-  start: ""
+  start: " / "
 };
 var defaultMessageStyles = {
   info: { color: chalk.cyan, end: "", indent: 0, start: ", " },
@@ -156,9 +159,9 @@ function stylizeText(text, style, colorizeStart = false, colorizeEnd = false) {
   const _start = colorizeStart ? style.color(style.start) : style.start;
   const _end = colorizeEnd ? style.color(style.end) : style.end;
   if (Array.isArray(text)) {
-    return text.map((t) => `${_start}${style.color(t)}`).join(`${_end}`);
+    return text.map((t) => `${" ".repeat(style.indent)}${_start}${style.color(t)}`).join(`${_end}`);
   }
-  return `${_start}${style.color(text)}${_end}`;
+  return `${" ".repeat(style.indent)}${_start}${style.color(text)}${_end}`;
 }
 function stylizeLevelText(level, text, colorizeStart = false, colorizeEnd = false) {
   const style = getLevelStyle(level);
@@ -197,7 +200,6 @@ var style_default = {
 };
 
 // src/format.ts
-var moment = __require("moment");
 var defaultLevelText = {
   debug: "DEBUG",
   info: "INFO",
@@ -207,9 +209,10 @@ var defaultLevelText = {
 };
 var defaultLogFormat = {
   time: "YYYY-MM-DD HH:mm:ss",
-  header: "%l | %t | %s%e:%m"
+  fmt: "$l | $t | $s$e:$m"
 };
 var levelText = __spreadValues({}, defaultLevelText);
+var logFormat = __spreadValues({}, defaultLogFormat);
 function setLevelText(level, text) {
   if (levelText[level] !== void 0) {
     levelText[level] = text || defaultLevelText[level];
@@ -217,9 +220,19 @@ function setLevelText(level, text) {
     throw new Error(`Level ${level} not found`);
   }
 }
+function setLogFormat(fmt) {
+  if (fmt) {
+    logFormat.fmt = fmt;
+  }
+}
+function setLogTimeFormat(fmt) {
+  if (fmt) {
+    logFormat.time = fmt;
+  }
+}
 function getCurrentTime(fmt) {
   const format2 = fmt || defaultLogFormat.time;
-  return moment().format(format2);
+  return dayjs().format(format2);
 }
 function createLogData(level, service, event, message) {
   return {
@@ -230,14 +243,17 @@ function createLogData(level, service, event, message) {
     message
   };
 }
-function format(fmt, logData) {
-  return fmt.replace("$l", stylizeLevelText(logData.level, logData.level)).replace("$t", logData.time).replace("$s", stylizeServiceText(logData.service)).replace("$e", stylizeEventText(logData.event)).replace("$m", stylizeMessageText(logData.level, logData.message));
+function format(logData) {
+  let _retfmt = logFormat.fmt || defaultLogFormat.fmt;
+  return _retfmt.replace("$l", stylizeLevelText(logData.level, logData.level)).replace("$t", logData.time).replace("$s", stylizeServiceText(logData.service)).replace("$e", stylizeEventText(logData.event)).replace("$m", stylizeMessageText(logData.level, logData.message));
 }
 var format_default = {
-  createLogData,
-  format,
   setLevelText,
-  getCurrentTime
+  setLogFormat,
+  setLogTimeFormat,
+  getCurrentTime,
+  createLogData,
+  format
 };
 
 // src/file.ts
@@ -275,8 +291,8 @@ var file_default = {
 };
 
 // src/index.ts
-function minlog(fmt, log) {
-  const data = format(fmt, log);
+function minlog(log) {
+  const data = format(log);
   console.log(data);
   if (isAllowToWriteFile()) {
     writeToFile("", data);

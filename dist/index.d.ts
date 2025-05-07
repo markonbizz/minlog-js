@@ -14,6 +14,22 @@ type LogData = {
  */
 declare function setLevelText(level: string, text: string): void;
 /**
+ * Sets the log format
+ * @param fmt
+ * available variables:
+ * - $l - log level
+ * - $t - time
+ * - $s - service
+ * - $e - event
+ * - $m - message
+ */
+declare function setLogFormat(fmt: string): void;
+/**
+ * Set the time format for the log
+ * @param fmt this follows the moment.js format
+ */
+declare function setLogTimeFormat(fmt: string): void;
+/**
  * Get current time
  * @param fmt
  * @returns
@@ -34,12 +50,14 @@ declare function createLogData(level: string, service: string, event: string, me
  * @param logData
  * @returns
  */
-declare function format(fmt: string, logData: LogData): string;
+declare function format(logData: LogData): string;
 declare const _default$3: {
+    setLevelText: typeof setLevelText;
+    setLogFormat: typeof setLogFormat;
+    setLogTimeFormat: typeof setLogTimeFormat;
+    getCurrentTime: typeof getCurrentTime;
     createLogData: typeof createLogData;
     format: typeof format;
-    setLevelText: typeof setLevelText;
-    getCurrentTime: typeof getCurrentTime;
 };
 
 type format$1_LogData = LogData;
@@ -47,8 +65,10 @@ declare const format$1_createLogData: typeof createLogData;
 declare const format$1_format: typeof format;
 declare const format$1_getCurrentTime: typeof getCurrentTime;
 declare const format$1_setLevelText: typeof setLevelText;
+declare const format$1_setLogFormat: typeof setLogFormat;
+declare const format$1_setLogTimeFormat: typeof setLogTimeFormat;
 declare namespace format$1 {
-  export { type format$1_LogData as LogData, format$1_createLogData as createLogData, _default$3 as default, format$1_format as format, format$1_getCurrentTime as getCurrentTime, format$1_setLevelText as setLevelText };
+  export { type format$1_LogData as LogData, format$1_createLogData as createLogData, _default$3 as default, format$1_format as format, format$1_getCurrentTime as getCurrentTime, format$1_setLevelText as setLevelText, format$1_setLogFormat as setLogFormat, format$1_setLogTimeFormat as setLogTimeFormat };
 }
 
 /**
@@ -167,7 +187,7 @@ declare namespace style {
   export { type style_BaseTextStyle as BaseTextStyle, type style_EventTextStyle as EventTextStyle, type style_LevelTextStyle as LevelTextStyle, type style_MessageTextStyle as MessageTextStyle, type style_ServiceTextStyle as ServiceTextStyle, style_createTextStyle as createTextStyle, _default$1 as default, style_getEventStyle as getEventStyle, style_getLevelStyle as getLevelStyle, style_getMessageStyle as getMessageStyle, style_getServiceStyle as getServiceStyle, style_printStyleAttributes as printStyleAttributes, style_restoreAllStylesToDefault as restoreAllStylesToDefault, style_restoreEventStyleToDefault as restoreEventStyleToDefault, style_restoreLevelStylesToDefault as restoreLevelStylesToDefault, style_restoreMessageStylesToDefault as restoreMessageStylesToDefault, style_restoreServiceStyleToDefault as restoreServiceStyleToDefault, style_setEventStyle as setEventStyle, style_setLevelStyle as setLevelStyle, style_setMessageStyle as setMessageStyle, style_setServiceStyle as setServiceStyle, style_stylizeEventText as stylizeEventText, style_stylizeLevelText as stylizeLevelText, style_stylizeMessageText as stylizeMessageText, style_stylizeServiceText as stylizeServiceText };
 }
 
-declare function minlog(fmt: string, log: LogData): void;
+declare function minlog(log: LogData): void;
 
 declare const _default: {
     minlog: typeof minlog;

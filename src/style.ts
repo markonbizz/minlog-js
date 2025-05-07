@@ -35,7 +35,7 @@ const defaultEventStyles: EventTextStyle = {
     color: chalk.magentaBright,
     end: "",
     indent: 0,
-    start: "",
+    start: " / ",
 };
 
 const defaultMessageStyles: Record<string, MessageTextStyle> = {
@@ -169,9 +169,9 @@ function stylizeText(
     const _end = colorizeEnd ? style.color(style.end): style.end;
 
     if (Array.isArray(text)) {
-        return text.map((t) => `${_start}${style.color(t)}`).join(`${_end}`);
+        return text.map((t) => `${' '.repeat(style.indent)}${_start}${style.color(t)}`).join(`${_end}`);
     }
-    return `${_start}${style.color(text)}${_end}`;
+    return `${' '.repeat(style.indent)}${_start}${style.color(text)}${_end}`;
 }
 
 export function stylizeLevelText(
