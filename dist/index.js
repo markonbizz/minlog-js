@@ -58,8 +58,11 @@ __export(format_exports, {
   createLogData: () => createLogData,
   default: () => format_default,
   format: () => format,
+  getCurrentDate: () => getCurrentDate,
   getCurrentTime: () => getCurrentTime,
+  setExceptionFormat: () => setExceptionFormat,
   setLevelText: () => setLevelText,
+  setLogDateFormat: () => setLogDateFormat,
   setLogFormat: () => setLogFormat,
   setLogTimeFormat: () => setLogTimeFormat
 });
@@ -69,6 +72,7 @@ var import_dayjs = __toESM(require("dayjs"));
 var style_exports = {};
 __export(style_exports, {
   createTextStyle: () => createTextStyle,
+  decolorizeText: () => decolorizeText,
   default: () => style_default,
   getEventStyle: () => getEventStyle,
   getLevelStyle: () => getLevelStyle,
@@ -90,6 +94,7 @@ __export(style_exports, {
   stylizeServiceText: () => stylizeServiceText
 });
 var import_chalk = __toESM(require("chalk"));
+var import_strip_ansi = __toESM(require("strip-ansi"));
 var defaultLevelStyles = {
   info: { color: import_chalk.default.cyanBright, end: "", indent: 0, start: "" },
   warn: { color: import_chalk.default.yellowBright, end: "", indent: 0, start: "" },
@@ -134,10 +139,10 @@ function setLevelStyle(newStyles) {
   }
 }
 function setServiceStyle(style) {
-  Object.assign(serviceStyle, style);
+  Object.assign(serviceStyle, style || defaultServiceStyles);
 }
 function setEventStyle(style) {
-  Object.assign(eventStyle, style);
+  Object.assign(eventStyle, style || defaultEventStyles);
 }
 function setMessageStyle(newStyles) {
   for (const key in newStyles) {
@@ -164,7 +169,7 @@ function restoreAllStylesToDefault() {
 }
 function getLevelStyle(level) {
   const _level = level.toLowerCase();
-  return levelStyles[_level] || { color: import_chalk.default.white, end: "", indent: 0, start: "" };
+  return levelStyles[_level] || defaultLevelStyles[_level];
 }
 function getServiceStyle() {
   return serviceStyle || defaultServiceStyles;
@@ -173,7 +178,8 @@ function getEventStyle() {
   return eventStyle || defaultEventStyles;
 }
 function getMessageStyle(level) {
-  return messageStyles[level] || { color: import_chalk.default.white, end: "", indent: 0, start: "" };
+  const _level = level.toLowerCase();
+  return messageStyles[_level] || defaultMessageStyles[_level];
 }
 function printStyleAttributes(style) {
   console.log("style Attributes:");
@@ -183,12 +189,13 @@ function printStyleAttributes(style) {
   console.log("  end:   ", JSON.stringify(style.end));
 }
 function stylizeText(text, style, colorizeStart = false, colorizeEnd = false) {
-  const _start = colorizeStart ? style.color(style.start) : style.start;
-  const _end = colorizeEnd ? style.color(style.end) : style.end;
-  if (Array.isArray(text)) {
-    return text.map((t) => `${" ".repeat(style.indent)}${_start}${style.color(t)}`).join(`${_end}`);
-  }
-  return `${" ".repeat(style.indent)}${_start}${style.color(text)}${_end}`;
+  const textArray = Array.isArray(text) ? text : [text];
+  const colorizedStart = colorizeStart ? style.color(style.start) : style.start;
+  const colorizedEnd = colorizeEnd ? style.color(style.end) : style.end;
+  const _indent = " ".repeat(style.indent);
+  return textArray.map((t) => {
+    return `${_indent}${colorizedStart}${style.color(t)}`;
+  }).join(colorizedEnd);
 }
 function stylizeLevelText(level, text, colorizeStart = false, colorizeEnd = false) {
   const style = getLevelStyle(level);
@@ -204,7 +211,11 @@ function stylizeMessageText(level, text, colorizeStart = false, colorizeEnd = fa
   const style = getMessageStyle(level);
   return stylizeText(text, style, colorizeStart, colorizeEnd);
 }
+function decolorizeText(text) {
+  return (0, import_strip_ansi.default)(text);
+}
 var style_default = {
+  decolorizeText,
   createTextStyle,
   setLevelStyle,
   setServiceStyle,
@@ -227,6 +238,7 @@ var style_default = {
 };
 
 // src/format.ts
+var dayjsInstace = (0, import_dayjs.default)();
 var defaultLevelText = {
   debug: "DEBUG",
   info: "INFO",
@@ -234,12 +246,14 @@ var defaultLevelText = {
   error: "ERROR",
   success: "SUCCESS"
 };
-var defaultLogFormat = {
+var defaultFormats = {
   time: "YYYY-MM-DD HH:mm:ss",
-  fmt: "$l | $t | $s$e:$m"
+  date: "YYYY-MM-DD",
+  fmt: "$l | $t | $s$e:$m",
+  exception: "$l | $t | $s$e:\n$m"
 };
 var levelText = __spreadValues({}, defaultLevelText);
-var logFormat = __spreadValues({}, defaultLogFormat);
+var logFormat = __spreadValues({}, defaultFormats);
 function setLevelText(level, text) {
   if (levelText[level] !== void 0) {
     levelText[level] = text || defaultLevelText[level];
@@ -252,26 +266,38 @@ function setLogFormat(fmt) {
     logFormat.fmt = fmt;
   }
 }
+function setExceptionFormat(fmt) {
+  if (fmt) {
+    logFormat.exception = fmt;
+  }
+}
 function setLogTimeFormat(fmt) {
   if (fmt) {
     logFormat.time = fmt;
   }
 }
-function getCurrentTime(fmt) {
-  const format2 = fmt || defaultLogFormat.time;
-  return (0, import_dayjs.default)().format(format2);
+function setLogDateFormat(fmt) {
+  if (fmt) {
+    logFormat.date = fmt;
+  }
+}
+function getCurrentTime() {
+  return (0, import_dayjs.default)().format(logFormat.time || defaultFormats.time);
+}
+function getCurrentDate() {
+  return (0, import_dayjs.default)().format(logFormat.date || defaultFormats.date);
 }
 function createLogData(level, service, event, message) {
   return {
     level: levelText[level.toLowerCase()] || "_",
-    time: getCurrentTime(defaultLogFormat.time),
+    time: getCurrentTime(),
     service,
     event,
     message
   };
 }
 function format(logData) {
-  let _retfmt = logFormat.fmt || defaultLogFormat.fmt;
+  let _retfmt = logData.level !== "info" && logData.level !== "success" ? logFormat.exception : logFormat.fmt;
   return _retfmt.replace("$l", stylizeLevelText(logData.level, logData.level)).replace("$t", logData.time).replace("$s", stylizeServiceText(logData.service)).replace("$e", stylizeEventText(logData.event)).replace("$m", stylizeMessageText(logData.level, logData.message));
 }
 var format_default = {
@@ -287,24 +313,39 @@ var format_default = {
 var file_exports = {};
 __export(file_exports, {
   default: () => file_default,
+  getFilePath: () => getFilePath,
   isAllowToWriteFile: () => isAllowToWriteFile,
   setAllowToWriteFile: () => setAllowToWriteFile,
+  setFilePath: () => setFilePath,
   writeToFile: () => writeToFile
 });
 var import_chalk2 = __toESM(require("chalk"));
+var import_fs = __toESM(require("fs"));
+var import_path = __toESM(require("path"));
 var defaultFilePath = "./logs/latest.log";
-var allowWriteFile = false;
+var defaultAllowWriteFile = true;
+var allowWriteFile = defaultAllowWriteFile;
+var filePath = defaultFilePath;
 function setAllowToWriteFile(value) {
   allowWriteFile = value;
+}
+function setFilePath(value) {
+  if (value) {
+    filePath = value;
+  }
 }
 function isAllowToWriteFile() {
   return allowWriteFile;
 }
-function writeToFile(filePath, data) {
+function getFilePath() {
+  return filePath;
+}
+function writeToFile(data) {
   if (allowWriteFile) {
-    const fs = require("fs");
-    const path = require("path");
-    fs.appendFileSync(filePath || defaultFilePath, data + "\n", "utf8");
+    if (!import_fs.default.existsSync(filePath || defaultFilePath)) {
+      import_fs.default.mkdirSync(import_path.default.dirname(filePath || defaultFilePath), { recursive: true });
+    }
+    import_fs.default.appendFileSync(filePath || defaultFilePath, data + "\n", "utf8");
   } else {
     const minlogText = `minlog-js: "${import_chalk2.default.yellowBright.bold("allowWriteFile")}" is "false". Use "${import_chalk2.default.yellowBright.bold("setAllowToWriteFile(true)")}" to enable file writing.`;
     console.log(`${import_chalk2.default.gray.bold(minlogText)}
@@ -313,16 +354,19 @@ ${import_chalk2.default.gray.bold("Log not written to file")}`);
 }
 var file_default = {
   setAllowToWriteFile,
+  setFilePath,
   isAllowToWriteFile,
+  getFilePath,
   writeToFile
 };
 
 // src/index.ts
 function minlog(log) {
-  const data = format(log);
+  let data = format(log);
   console.log(data);
+  data = decolorizeText(data);
   if (isAllowToWriteFile()) {
-    writeToFile("", data);
+    writeToFile(data);
   }
 }
 var index_default = {

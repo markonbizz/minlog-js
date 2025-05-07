@@ -1,7 +1,12 @@
 import chalk from "chalk";
+import fs from "fs";
+import path from "path";
 
 const defaultFilePath: string = './logs/latest.log';
-let allowWriteFile: boolean = false;
+const defaultAllowWriteFile: boolean = true;
+
+let allowWriteFile: boolean = defaultAllowWriteFile;
+let filePath: string | null | undefined = defaultFilePath;
 
 /**
  * Set the allowWriteFile flag
@@ -12,6 +17,12 @@ export function setAllowToWriteFile(value: boolean): void {
     allowWriteFile = value;
 }
 
+export function setFilePath(value: string): void {
+    if (value) {
+        filePath = value;
+    }
+}
+
 /**
  * Get the value of allowWriteFile flag
  * @returns boolean
@@ -20,16 +31,20 @@ export function isAllowToWriteFile(): boolean {
     return allowWriteFile;
 }
 
+export function getFilePath(): string | null | undefined {
+    return filePath;
+}
+
 /**
  * Write log data to a file
  * @param filePath - the path to the file
  * @param data - the log data to write
  */
-export function writeToFile(filePath: string | null | undefined, data: string): void {
+export function writeToFile(data: string): void {
     if (allowWriteFile) {
-        const fs = require('fs');
-        const path = require('path');
-
+        if (!fs.existsSync(filePath || defaultFilePath)) {
+            fs.mkdirSync(path.dirname(filePath || defaultFilePath), { recursive: true });
+        }
         fs.appendFileSync(filePath || defaultFilePath, data + '\n', 'utf8');
     } else {
         const minlogText = `minlog-js: "${chalk.yellowBright.bold("allowWriteFile")}" is "false". Use "${chalk.yellowBright.bold("setAllowToWriteFile(true)")}" to enable file writing.`;
@@ -39,6 +54,8 @@ export function writeToFile(filePath: string | null | undefined, data: string): 
 
 export default {
     setAllowToWriteFile,
+    setFilePath,
     isAllowToWriteFile,
+    getFilePath,
     writeToFile
 };

@@ -1,4 +1,5 @@
 import chalk, { ChalkInstance } from "chalk";
+import stripAnsi from "strip-ansi";
 
 // ====== Type Definitions ======
 
@@ -88,11 +89,11 @@ export function setLevelStyle(newStyles: Record<string, LevelTextStyle>): void {
 }
 
 export function setServiceStyle(style: Partial<ServiceTextStyle>): void {
-    Object.assign(serviceStyle, style);
+    Object.assign(serviceStyle, style || defaultServiceStyles);
 }
 
 export function setEventStyle(style: Partial<EventTextStyle>): void {
-    Object.assign(eventStyle, style);
+    Object.assign(eventStyle, style || defaultEventStyles);
 }
 
 export function setMessageStyle(newStyles: Record<string, MessageTextStyle>): void {
@@ -133,7 +134,7 @@ export function restoreAllStylesToDefault(): void {
 
 export function getLevelStyle(level: string): LevelTextStyle {
     const _level: string = level.toLowerCase();
-    return levelStyles[_level] || {color: chalk.white, end: "", indent: 0, start: ""};
+    return levelStyles[_level] || defaultLevelStyles[_level];
 }
 
 export function getServiceStyle(): ServiceTextStyle {
@@ -145,7 +146,8 @@ export function getEventStyle(): EventTextStyle {
 }
 
 export function getMessageStyle(level: string): MessageTextStyle {
-    return messageStyles[level] || {color: chalk.white, end: "", indent: 0, start: ""};
+    const _level: string = level.toLowerCase();
+    return messageStyles[_level] || defaultMessageStyles[_level];
 }
 
 // ====== Debug Functions ======
@@ -165,13 +167,14 @@ function stylizeText(
     colorizeStart: boolean = false,
     colorizeEnd: boolean = false
 ): string {
-    const _start = colorizeStart ? style.color(style.start): style.start;
-    const _end = colorizeEnd ? style.color(style.end): style.end;
+    const textArray: string[] = Array.isArray(text) ? text : [text];
+    const colorizedStart: string = colorizeStart ? style.color(style.start) : style.start;
+    const colorizedEnd: string = colorizeEnd ? style.color(style.end) : style.end;
+    const _indent: string = " ".repeat(style.indent);
 
-    if (Array.isArray(text)) {
-        return text.map((t) => `${' '.repeat(style.indent)}${_start}${style.color(t)}`).join(`${_end}`);
-    }
-    return `${' '.repeat(style.indent)}${_start}${style.color(text)}${_end}`;
+    return textArray.map((t) => {
+        return `${_indent}${colorizedStart}${style.color(t)}`;
+    }).join(colorizedEnd);
 }
 
 export function stylizeLevelText(
@@ -179,7 +182,7 @@ export function stylizeLevelText(
     colorizeStart: boolean = false,
     colorizeEnd: boolean = false
 ): string {
-    const style = getLevelStyle(level);
+    const style: LevelTextStyle = getLevelStyle(level);
     return stylizeText(text, style, colorizeStart, colorizeEnd);
 }
 
@@ -204,11 +207,16 @@ export function stylizeMessageText(
     colorizeStart: boolean = false,
     colorizeEnd: boolean = false
 ): string {
-    const style = getMessageStyle(level);
+    const style: MessageTextStyle = getMessageStyle(level);
     return stylizeText(text, style, colorizeStart, colorizeEnd);
 }
 
+export function decolorizeText(text: string,): string {
+    return stripAnsi(text);
+}
+
 export default {
+    decolorizeText,
     createTextStyle,
     setLevelStyle,
     setServiceStyle,

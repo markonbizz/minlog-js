@@ -22,19 +22,28 @@ declare function setLevelText(level: string, text: string): void;
  * - $s - service
  * - $e - event
  * - $m - message
+ *
+ * @example setLogFormat('$l | $t | $s$e:$m')
  */
 declare function setLogFormat(fmt: string): void;
+declare function setExceptionFormat(fmt: string): void;
 /**
  * Set the time format for the log
- * @param fmt this follows the moment.js format
+ * @param fmt this follows the `moment.js` / `day.js` format
  */
 declare function setLogTimeFormat(fmt: string): void;
+/**
+ * Set the date format for the log
+ * @param fmt this follows the `moment.js` / `day.js` format
+ */
+declare function setLogDateFormat(fmt: string): void;
 /**
  * Get current time
  * @param fmt
  * @returns
  */
-declare function getCurrentTime(fmt: string): string;
+declare function getCurrentTime(): string;
+declare function getCurrentDate(): string;
 /**
  * Create log data
  * @param level
@@ -63,12 +72,15 @@ declare const _default$3: {
 type format$1_LogData = LogData;
 declare const format$1_createLogData: typeof createLogData;
 declare const format$1_format: typeof format;
+declare const format$1_getCurrentDate: typeof getCurrentDate;
 declare const format$1_getCurrentTime: typeof getCurrentTime;
+declare const format$1_setExceptionFormat: typeof setExceptionFormat;
 declare const format$1_setLevelText: typeof setLevelText;
+declare const format$1_setLogDateFormat: typeof setLogDateFormat;
 declare const format$1_setLogFormat: typeof setLogFormat;
 declare const format$1_setLogTimeFormat: typeof setLogTimeFormat;
 declare namespace format$1 {
-  export { type format$1_LogData as LogData, format$1_createLogData as createLogData, _default$3 as default, format$1_format as format, format$1_getCurrentTime as getCurrentTime, format$1_setLevelText as setLevelText, format$1_setLogFormat as setLogFormat, format$1_setLogTimeFormat as setLogTimeFormat };
+  export { type format$1_LogData as LogData, format$1_createLogData as createLogData, _default$3 as default, format$1_format as format, format$1_getCurrentDate as getCurrentDate, format$1_getCurrentTime as getCurrentTime, format$1_setExceptionFormat as setExceptionFormat, format$1_setLevelText as setLevelText, format$1_setLogDateFormat as setLogDateFormat, format$1_setLogFormat as setLogFormat, format$1_setLogTimeFormat as setLogTimeFormat };
 }
 
 /**
@@ -77,28 +89,34 @@ declare namespace format$1 {
  * @returns void
  */
 declare function setAllowToWriteFile(value: boolean): void;
+declare function setFilePath(value: string): void;
 /**
  * Get the value of allowWriteFile flag
  * @returns boolean
  */
 declare function isAllowToWriteFile(): boolean;
+declare function getFilePath(): string | null | undefined;
 /**
  * Write log data to a file
  * @param filePath - the path to the file
  * @param data - the log data to write
  */
-declare function writeToFile(filePath: string | null | undefined, data: string): void;
+declare function writeToFile(data: string): void;
 declare const _default$2: {
     setAllowToWriteFile: typeof setAllowToWriteFile;
+    setFilePath: typeof setFilePath;
     isAllowToWriteFile: typeof isAllowToWriteFile;
+    getFilePath: typeof getFilePath;
     writeToFile: typeof writeToFile;
 };
 
+declare const file_getFilePath: typeof getFilePath;
 declare const file_isAllowToWriteFile: typeof isAllowToWriteFile;
 declare const file_setAllowToWriteFile: typeof setAllowToWriteFile;
+declare const file_setFilePath: typeof setFilePath;
 declare const file_writeToFile: typeof writeToFile;
 declare namespace file {
-  export { _default$2 as default, file_isAllowToWriteFile as isAllowToWriteFile, file_setAllowToWriteFile as setAllowToWriteFile, file_writeToFile as writeToFile };
+  export { _default$2 as default, file_getFilePath as getFilePath, file_isAllowToWriteFile as isAllowToWriteFile, file_setAllowToWriteFile as setAllowToWriteFile, file_setFilePath as setFilePath, file_writeToFile as writeToFile };
 }
 
 type BaseTextStyle = {
@@ -137,7 +155,9 @@ declare function stylizeLevelText(level: string, text: string | string[], colori
 declare function stylizeServiceText(text: string | string[], colorizeStart?: boolean, colorizeEnd?: boolean): string;
 declare function stylizeEventText(text: string | string[], colorizeStart?: boolean, colorizeEnd?: boolean): string;
 declare function stylizeMessageText(level: string, text: string | string[], colorizeStart?: boolean, colorizeEnd?: boolean): string;
+declare function decolorizeText(text: string): string;
 declare const _default$1: {
+    decolorizeText: typeof decolorizeText;
     createTextStyle: typeof createTextStyle;
     setLevelStyle: typeof setLevelStyle;
     setServiceStyle: typeof setServiceStyle;
@@ -165,6 +185,7 @@ type style_LevelTextStyle = LevelTextStyle;
 type style_MessageTextStyle = MessageTextStyle;
 type style_ServiceTextStyle = ServiceTextStyle;
 declare const style_createTextStyle: typeof createTextStyle;
+declare const style_decolorizeText: typeof decolorizeText;
 declare const style_getEventStyle: typeof getEventStyle;
 declare const style_getLevelStyle: typeof getLevelStyle;
 declare const style_getMessageStyle: typeof getMessageStyle;
@@ -184,7 +205,7 @@ declare const style_stylizeLevelText: typeof stylizeLevelText;
 declare const style_stylizeMessageText: typeof stylizeMessageText;
 declare const style_stylizeServiceText: typeof stylizeServiceText;
 declare namespace style {
-  export { type style_BaseTextStyle as BaseTextStyle, type style_EventTextStyle as EventTextStyle, type style_LevelTextStyle as LevelTextStyle, type style_MessageTextStyle as MessageTextStyle, type style_ServiceTextStyle as ServiceTextStyle, style_createTextStyle as createTextStyle, _default$1 as default, style_getEventStyle as getEventStyle, style_getLevelStyle as getLevelStyle, style_getMessageStyle as getMessageStyle, style_getServiceStyle as getServiceStyle, style_printStyleAttributes as printStyleAttributes, style_restoreAllStylesToDefault as restoreAllStylesToDefault, style_restoreEventStyleToDefault as restoreEventStyleToDefault, style_restoreLevelStylesToDefault as restoreLevelStylesToDefault, style_restoreMessageStylesToDefault as restoreMessageStylesToDefault, style_restoreServiceStyleToDefault as restoreServiceStyleToDefault, style_setEventStyle as setEventStyle, style_setLevelStyle as setLevelStyle, style_setMessageStyle as setMessageStyle, style_setServiceStyle as setServiceStyle, style_stylizeEventText as stylizeEventText, style_stylizeLevelText as stylizeLevelText, style_stylizeMessageText as stylizeMessageText, style_stylizeServiceText as stylizeServiceText };
+  export { type style_BaseTextStyle as BaseTextStyle, type style_EventTextStyle as EventTextStyle, type style_LevelTextStyle as LevelTextStyle, type style_MessageTextStyle as MessageTextStyle, type style_ServiceTextStyle as ServiceTextStyle, style_createTextStyle as createTextStyle, style_decolorizeText as decolorizeText, _default$1 as default, style_getEventStyle as getEventStyle, style_getLevelStyle as getLevelStyle, style_getMessageStyle as getMessageStyle, style_getServiceStyle as getServiceStyle, style_printStyleAttributes as printStyleAttributes, style_restoreAllStylesToDefault as restoreAllStylesToDefault, style_restoreEventStyleToDefault as restoreEventStyleToDefault, style_restoreLevelStylesToDefault as restoreLevelStylesToDefault, style_restoreMessageStylesToDefault as restoreMessageStylesToDefault, style_restoreServiceStyleToDefault as restoreServiceStyleToDefault, style_setEventStyle as setEventStyle, style_setLevelStyle as setLevelStyle, style_setMessageStyle as setMessageStyle, style_setServiceStyle as setServiceStyle, style_stylizeEventText as stylizeEventText, style_stylizeLevelText as stylizeLevelText, style_stylizeMessageText as stylizeMessageText, style_stylizeServiceText as stylizeServiceText };
 }
 
 declare function minlog(log: LogData): void;

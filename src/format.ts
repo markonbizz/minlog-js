@@ -21,13 +21,15 @@ const defaultLevelText: Record<string, string> = {
     error: 'ERROR',
     success: 'SUCCESS'
 };
-const defaultLogFormat: Record<string, string> = {
+const defaultFormats: Record<string, string> = {
     time: 'YYYY-MM-DD HH:mm:ss',
-    fmt: '$l | $t | $s$e:$m'
+    date: 'YYYY-MM-DD',
+    fmt: '$l | $t | $s$e:$m',
+    exception: '$l | $t | $s$e:\n$m'
 }
 
 let levelText: Record<string, string> = { ...defaultLevelText };
-let logFormat: Record<string, string> = { ...defaultLogFormat };
+let logFormat: Record<string, string> = { ...defaultFormats };
 
 /**
  * Customize the text for a specific log level if you want to
@@ -44,13 +46,15 @@ export function setLevelText(level: string, text: string): void {
 
 /**
  * Sets the log format
- * @param fmt 
+ * @param fmt
  * available variables:
  * - $l - log level
  * - $t - time
  * - $s - service
  * - $e - event
  * - $m - message
+ *
+ * @example setLogFormat('$l | $t | $s$e:$m')
  */
 export function setLogFormat(fmt: string): void {
     if (fmt) {
@@ -59,8 +63,26 @@ export function setLogFormat(fmt: string): void {
 }
 
 /**
+ * Sets the log exception format
+ * @param fmt
+ * available variables:
+ * - $l - log level
+ * - $t - time
+ * - $s - service
+ * - $e - event
+ * - $m - message
+ *
+ * @example setLogFormat('$l | $t | $s$e:$m')
+ */
+export function setExceptionFormat(fmt: string): void {
+    if (fmt) {
+        logFormat.exception = fmt;
+    }
+}
+
+/**
  * Set the time format for the log
- * @param fmt this follows the moment.js format 
+ * @param fmt this follows the `moment.js` / `day.js` format 
  */
 export function setLogTimeFormat(fmt: string): void {
     if (fmt) {
@@ -68,16 +90,29 @@ export function setLogTimeFormat(fmt: string): void {
     }
 }
 
+/**
+ * Set the date format for the log
+ * @param fmt this follows the `moment.js` / `day.js` format 
+ */
+export function setLogDateFormat(fmt: string): void {
+    if (fmt) {
+        logFormat.date = fmt;
+    }
+}
 
 /**
  * Get current time
  * @param fmt 
  * @returns 
  */
-export function getCurrentTime(fmt: string): string {
-    const format = fmt || defaultLogFormat.time;
-    return dayjs().format(format);
+export function getCurrentTime(): string {
+    return dayjs().format(logFormat.time || defaultFormats.time);
 }
+
+export function getCurrentDate(): string {
+    return dayjs().format(logFormat.date || defaultFormats.date);
+}
+
 
 /**
  * Create log data
@@ -94,7 +129,7 @@ export function createLogData(
 ): LogData {
     return {
         level:      levelText[level.toLowerCase()] || "_",
-        time:       getCurrentTime(defaultLogFormat.time),
+        time:       getCurrentTime(),
         service:    service,
         event:      event,
         message:    message
@@ -108,7 +143,8 @@ export function createLogData(
  * @returns  
  */
 export function format(logData: LogData): string {
-    let _retfmt = logFormat.fmt || defaultLogFormat.fmt;
+    let _retfmt = (logData.level !== 'info' && logData.level !== 'success') ? 
+        logFormat.exception : logFormat.fmt;
     return _retfmt
         .replace('$l', stylizeLevelText(logData.level, logData.level))
         .replace('$t', logData.time)

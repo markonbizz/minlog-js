@@ -4,10 +4,11 @@ import * as style from './style'
 
 
 function minlog(log: format.LogData): void {
-    const data: string = format.format(log);
+    let data: string = format.format(log);
     console.log(data);
+    data = style.decolorizeText(data);
     if (file.isAllowToWriteFile()) {
-        file.writeToFile("", data);
+        file.writeToFile(data);
     }
 }
 
