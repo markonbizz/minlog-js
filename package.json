@@ -2,20 +2,29 @@
   "name": "loggy-ts",
   "version": "0.0.1",
   "description": "A simple logger",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap --out-dir dist"
+  },
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
   },
   "author": "Marcus Xie",
   "license": "ISC",
   "devDependencies": {
+    "@types/moment": "^2.11.29",
+    "@types/node": "^22.15.14",
+    "@types/traverse": "^0.6.37",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@types/node": "^22.15.9",
-    "@types/traverse": "^0.6.37",
     "chalk": "^5.4.1",
+    "moment": "^2.30.1",
     "strip-ansi": "^7.1.0",
     "traverse": "^0.6.11"
   }

@@ -59,24 +59,17 @@ let messageStyles:  Record<string, MessageTextStyle> = { ...defaultMessageStyles
  * Factory function to create a new text style
  */
 export function createTextStyle(
-    ...styles: Partial<BaseTextStyle>[]
+    color: ChalkInstance,
+    indent: number = 0,
+    start: string = "",
+    end: string = ""
 ): BaseTextStyle {
-    const base: BaseTextStyle = {
-        color: chalk.white,
-        indent: 0,
-        start: '',
-        end: '',
+    return {
+        color: color,
+        indent: indent,
+        start: start,
+        end: end,
     };
-
-    const result: BaseTextStyle = { ...base };
-    for (const style of styles) {
-        for (const key in style) {
-            if (style[key] !== undefined) {
-                (result as any)[key] = style[key];
-            }
-        }
-    }
-    return result;
 }
 
 // ====== Setter Functions ======
@@ -139,19 +132,20 @@ export function restoreAllStylesToDefault(): void {
 // ====== Getter Functions ======
 
 export function getLevelStyle(level: string): LevelTextStyle {
-    return levelStyles[level] || levelStyles.info;
+    const _level: string = level.toLowerCase();
+    return levelStyles[_level] || {color: chalk.white, end: "", indent: 0, start: ""};
 }
 
 export function getServiceStyle(): ServiceTextStyle {
-    return serviceStyle;
+    return serviceStyle || defaultServiceStyles;
 }
 
 export function getEventStyle(): EventTextStyle {
-    return eventStyle;
+    return eventStyle || defaultEventStyles;
 }
 
 export function getMessageStyle(level: string): MessageTextStyle {
-    return messageStyles[level] || messageStyles.info;
+    return messageStyles[level] || {color: chalk.white, end: "", indent: 0, start: ""};
 }
 
 // ====== Debug Functions ======
@@ -166,27 +160,72 @@ export function printStyleAttributes(style: BaseTextStyle): void {
 
 // ====== Stylize Functions ======
 
-function stylizeText(text: string | string[], style: BaseTextStyle): string | string[] {
+function stylizeText(
+    text: string | string[], style: BaseTextStyle,
+    colorizeStart: boolean = false,
+    colorizeEnd: boolean = false
+): string {
+    const _start = colorizeStart ? style.color(style.start): style.start;
+    const _end = colorizeEnd ? style.color(style.end): style.end;
+
     if (Array.isArray(text)) {
-        return text.map(_t => style.color(`${style.start}${_t}${style.end}`));
+        return text.map((t) => `${_start}${style.color(t)}`).join(`${_end}`);
     }
-    return style.color(`${style.start}${text}${style.end}`);
+    return `${_start}${style.color(text)}${_end}`;
 }
 
-export function stylizeLevelText(level: string, text: string | string[]): string | string[] {
+export function stylizeLevelText(
+    level: string, text: string | string[],
+    colorizeStart: boolean = false,
+    colorizeEnd: boolean = false
+): string {
     const style = getLevelStyle(level);
-    return stylizeText(text, style);
+    return stylizeText(text, style, colorizeStart, colorizeEnd);
 }
 
-export function stylizeServiceText(text: string | string[]): string | string[] {
-    return stylizeText(text, serviceStyle);
+export function stylizeServiceText(
+    text: string | string[],
+    colorizeStart: boolean = false,
+    colorizeEnd: boolean = false
+): string {
+    return stylizeText(text, serviceStyle, colorizeStart, colorizeEnd);
 }
 
-export function stylizeEventText(text: string | string[]): string | string[] {
-    return stylizeText(text, eventStyle);
+export function stylizeEventText(
+    text: string | string[],
+    colorizeStart: boolean = false,
+    colorizeEnd: boolean = false
+): string {
+    return stylizeText(text, eventStyle, colorizeStart, colorizeEnd);
 }
 
-export function stylizeMessageText(level: string, text: string | string[]): string | string[] {
+export function stylizeMessageText(
+    level: string, text: string | string[],
+    colorizeStart: boolean = false,
+    colorizeEnd: boolean = false
+): string {
     const style = getMessageStyle(level);
-    return stylizeText(text, style);
+    return stylizeText(text, style, colorizeStart, colorizeEnd);
 }
+
+export default {
+    createTextStyle,
+    setLevelStyle,
+    setServiceStyle,
+    setEventStyle,
+    setMessageStyle,
+    restoreLevelStylesToDefault,
+    restoreServiceStyleToDefault,
+    restoreEventStyleToDefault,
+    restoreMessageStylesToDefault,
+    restoreAllStylesToDefault,
+    getLevelStyle,
+    getServiceStyle,
+    getEventStyle,
+    getMessageStyle,
+    printStyleAttributes,
+    stylizeLevelText,
+    stylizeServiceText,
+    stylizeEventText,
+    stylizeMessageText
+};
