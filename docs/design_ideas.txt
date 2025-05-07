@@ -1,0 +1,32 @@
+2025.05.07
+
+package name: logtree? maybe someone can suggest other catchy name :)
+
+functionalies:
+    custom messages / hint(I perfer called it this way): 
+        allow user to prompt their messages if they know the exceptions/situations they are encountered with.
+
+    stack messages:
+        this logged the actual exception messages that occurred, usually is an array of string
+
+    meta:
+        contains all the info, includes level, service
+
+implement functions:
+    createLogger(config: key/value data) for sure
+    
+    createMeta(meta: key/value data) {
+        should contains = {
+            level: { 
+                shows how fucked up you are in a short way. 
+                default values = [
+                    info:   normal,
+                    success: normal / stack(optional), 
+                    warn:   stack, 
+                    error:  stack, 
+                    fatal:  stack
+                    trace/debug ?: stack
+                ]
+            }
+        }
+    }

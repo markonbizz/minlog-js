@@ -1,5 +1,5 @@
 {
-  "name": "minlog-js",
+  "name": "logtree",
   "version": "0.0.1",
   "description": "A simple logger",
   "main": "./dist/index.js",
